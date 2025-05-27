@@ -1,2 +1,11 @@
+# Node
 /node_modules
+
+# AWS
 /template.yml
+
+# Docker Compose
+/compose.override.yaml
+
+# IDE
+/.idea
