@@ -27,7 +27,7 @@ const RESPONSE_TYPES = {
  */
 const defaultConfiguration = {
     loader: {
-        paths: {mathjax: 'mathjax/es5'},
+        paths: { mathjax: 'mathjax/es5' },
         require: require,
         load: ['adaptors/liteDOM', 'input/mml', 'input/tex-full', 'output/svg']
     },
@@ -124,15 +124,13 @@ exports.render = async (event) => {
     const format = getFormat(event);
     const math = event.source;
     switch (event.output) {
-        case 'mathml':
-        {
+        case 'mathml': {
             const res = await typeset({ math, format, mml: true });
 
             return { contentType: RESPONSE_TYPES.mathml, data: res };
         }
 
-        case 'png':
-        {
+        case 'png': {
             const res = await typeset({ math, format, svg: true });
 
             const svg = MathJax.startup.adaptor.innerHTML(res);
@@ -142,8 +140,7 @@ exports.render = async (event) => {
             return { contentType: RESPONSE_TYPES.png, isBase64Encoded: true, data: data.toString('base64') };
         }
 
-        case 'svg':
-        {
+        case 'svg': {
             const res = await typeset({ math, format, svg: true });
 
             const svg = MathJax.startup.adaptor.innerHTML(res);
@@ -191,10 +188,10 @@ exports.handler = async (event) => {
             isBase64Encoded,
         };
     } catch (err) {
-        if (!(err instanceof Error)) {
+        if ( ! (err instanceof Error)) {
             throw new Error(err);
         }
-        if (!(err instanceof SyntaxError) && !err.message.startsWith('Invalid ')) {
+        if ( ! (err instanceof SyntaxError) && ! err.message.startsWith('Invalid ')) {
             throw err;
         }
 
