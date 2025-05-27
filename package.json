@@ -5,7 +5,7 @@
   "main": "index.js",
   "bin": "bin/server.js",
   "scripts": {
-    "start": "node bin/server.js",
+    "start": "node --stack_trace_limit=128 bin/server.js",
     "test": "mocha test/*.js test/**/*.js",
     "api-gateway": "sam local start-api --template templates/root.yml"
   },
