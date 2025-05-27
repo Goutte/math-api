@@ -1,0 +1,16 @@
+# Docker Compose configuration file.
+# Use with:
+#     docker compose up --detach
+# You can override values in this file by creating a `compose.override.yaml`.
+# Example of an override that opens the service on the port 80:
+#services:
+#    math-api:
+#        container_name: latex.m3p2.com
+#        ports:
+#            - 3000:80
+services:
+    math-api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
