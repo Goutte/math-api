@@ -123,6 +123,11 @@ exports.render = async (event) => {
 
     const format = getFormat(event);
     const math = event.source;
+
+    if (typeof math === 'undefined') {
+        throw new Error(`Invalid source: it is missing`);
+    }
+
     switch (event.output) {
         case 'mathml': {
             const res = await typeset({ math, format, mml: true });
