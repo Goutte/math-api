@@ -48,10 +48,164 @@ express.response.constructor.prototype.fromLambdaResponse = function (res) {
     return this;
 };
 
-const apigw = new express.Router();
+const router = new express.Router();
+
+// Landing page.
+router
+    .route('/')
+    .get(async (req, res, _next) => {
+        res.set('Content-Type', 'text/html');
+        res.send(`
+<html lang="en">
+<header>
+<title>LaTeX|MathML to MathML|SVG|PNG</title>
+<style>
+:root {
+  --main-color: #3c3c3c;
+  --main-bg-color: #e3e3e3;
+  --link-color: inherit;
+  --link-visited-color: inherit;
+  --link-hover-color: inherit;
+  --link-active-color: inherit;
+}
+@media screen and (prefers-color-scheme: dark) {
+    :root {
+      --main-color: #e3e3e3;
+      --main-bg-color: #2c2c2c;
+      --link-color: #ffa95c;
+      --link-visited-color: #f1790e;
+      --link-hover-color: #e5c09b;
+      --link-active-color: #e9730b;
+    }
+}
+@media print {
+    :root {
+      --main-color: #2c2c2c;
+      --main-bg-color: #ffffff;
+    }
+}
+body, textarea {
+  color: var(--main-color);
+  background-color: var(--main-bg-color);
+}
+a:link { color: var(--link-color); }
+a:visited { color: var(--link-visited-color); }
+a:hover { color: var(--link-hover-color); }
+a:active { color: var(--link-active-color); }
+button[type=submit] {
+    margin: 1em auto;
+    padding: 0.62em 1em;
+}
+.endpoint {
+    font-family: monospace;
+    font-size: 1.62rem;
+}
+.parameter {
+    font-size: 1.62rem;
+}
+</style>
+</header>
+<body>
+<h1>Microservice to Convert LaTeX or MathML to MathML, SVG or PNG</h1>
+<h2>Try it</h2>
+<form action="/render" method="get">
+<div>
+    <label>
+        Input Type:
+        <select name="input">
+            <option value="latex" selected>LaTeX</option>
+            <option value="mathml">MathML</option>
+        </select>
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <label>
+        Output Type:
+        <select name="output">
+            <option value="svg" selected>SVG</option>
+            <option value="mathml">MathML</option>
+            <option value="png">PNG</option>
+        </select>
+    </label>
+</div>
+<textarea name="source" cols="62" rows="10" required placeholder="Enter your LaTeX or MathML here…"></textarea>
+<input type="hidden" name="width" value="512">
+<input type="hidden" name="height" value="316">
+<br>
+<button type="submit">Convert</button>
+</form>
+<hr>
+<h2>Endpoints Documentation</h2>
+<h3 class="endpoint">GET /render</h3>
+<h4>Query parameters</h4>
+<ul>
+<li>
+    <code class="parameter">input</code> (<strong>required</strong>): the format of math in input.
+    <p>
+        <em>Valid values:</em>
+        <code class="value">latex</code>,
+        <code class="value">mathml</code>
+    </p>
+</li>
+<li>
+    <code class="parameter">output</code> (<strong>required</strong>): the output format.
+    <p>
+        <em>Valid values:</em>
+        <code class="value">mathml</code>,
+        <code class="value">svg</code>,
+        <code class="value">png</code>
+    </p>
+</li>
+<li>
+    <code class="parameter">source</code> (<strong>required</strong>): the math to be rendered.
+    Make sure it is URL-escaped.
+    <p>
+        <em>Valid value:</em> string type, depends on the input format.
+    </p>
+</li>
+<li>
+    <code class="parameter">inline</code> (<em>optional</em>): when input is latex, optionally enable "inline" mode.
+    <p>
+        <em>Valid values:</em>
+        <code class="value">0</code>,
+        <code class="value">1</code>
+    </p>
+</li>
+<li>
+    <code class="parameter">width</code>, <code class="parameter">height</code>  (<em>optional</em>):
+    when output is <code>png</code>, specify the dimensions of the image to generate.
+    <p>
+        <em>Valid values:</em> positive integers.
+    </p>
+</li>
+</ul>
+<hr>
+<h2>Credits</h2>
+<ul>
+    <li>
+        <strong>License:</strong> MIT
+    </li>
+    <li>
+        <strong>Source:</strong> <a href="https://github.com/Goutte/math-api">Goutte/math-api</a> on Github
+    </li>
+    <li>
+        <strong>Forked from:</strong> <a href="https://github.com/chialabs/math-api">chialabs/math-api</a> on Github
+    </li>
+    <li>
+        <strong>Contact:</strong>
+        <a href="mailto:agoutenoir@irap.omp.eu">agoutenoir@irap.omp.eu</a> &amp;
+        <a href="mailto:cmeny@irap.omp.eu">cmeny@irap.omp.eu</a>
+    </li>
+</ul>
+<footer>
+    &copy; <a href="https://m3p2.com">m3p2.com</a>
+</footer>
+</body>
+</html>
+        `);
+    });
 
 // Render endpoint.
-apigw
+router
     .route('/render')
     .get(async (req, res, next) => {
         try {
@@ -71,8 +225,8 @@ apigw
 // Assemble app.
 module.exports = express()
     .use(raw({ type: '*/*' }))
-    .use(apigw)
-    .use((err, req, res, next) => {
+    .use(router)
+    .use((err, req, res, _next) => {
         // Error handling.
         console.error('Integration error', err);
 

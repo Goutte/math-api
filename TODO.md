@@ -8,17 +8,17 @@
 - [x] Improve error message when source is missing
 - [x] Foreground Color Customization
 - [x] Background Color Customization
-- [ ] Improve 401 errors by providing usage documentation
-- [ ] Landing page on `/` with doc
-- [ ] Landing page on `/` with form
+- [x] Landing page on `/` with endpoints documentation
+- [x] Landing page on `/` with demo form
+- [ ] Bump stale dependencies
+- [ ] Improve 401 errors by providing usage documentation ?
+- [ ] Configuration via Environment vars
 - [ ] Cache
     - [ ] Redis
-    - [ ] File-Based
+    - [ ] File-Based ? _(filename max length issue)_
 - [ ] Cache Invalidation Endpoint
     - [ ] Protected (optionally)
 - [ ] Stats Endpoint
     - [ ] Protected (optionally)
 - …
 
-
-## 
