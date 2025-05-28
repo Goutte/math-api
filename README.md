@@ -47,7 +47,7 @@ docker run --name math-api -d -p 3000:3000 chialab/math-api
    **Valid values**: `latex`, `mathml`
 - `inline` (_optional_): when `input` is `latex`, optionally enable "inline" mode.  
    **Valid values**: `0`, `1`
-- `source` (**required**): the math to be rendered.  
+- `source` (**required**): the math to be rendered.  Make sure it is URL-escaped.
    **Valid values**: _string, depends on the input type_
 - `output` (**required**): the output format.  
    **Valid values**: `mathml`, `png`, `svg`
@@ -76,7 +76,7 @@ Accept: image/png
    **Valid values**: `latex`, `mathml`
 - `inline` (_optional_): when `input` is `latex`, optionally enable "inline" mode.  
    **Valid values**: _boolean_
-- `source` (**required**): the math to be rendered.  
+- `source` (**required**): the math to be rendered.
    **Valid values**: _string, depends on the input type_
 - `output` (**required**): the output format.  
    **Valid values**: `mathml`, `png`, `svg`
