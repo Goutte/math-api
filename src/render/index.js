@@ -2,7 +2,7 @@ const svg2png = require('svg2png');
 
 /** @typedef {{ input: 'latex', inline?: boolean } | { input: 'mathml' }} InputDefinition */
 /** @typedef {{ output: 'mathml' | 'svg' } | { output: 'png', width?: number, height?: number }} OutputDefinition */
-/** @typedef {InputDefinition & OutputDefinition & { source: string }} Input */
+/** @typedef {InputDefinition & OutputDefinition & { source: string } & { foreground?: string } & { background?: string }} Input */
 /** @typedef {'application/mathml+xml' | 'image/png' | 'image/svg+xml'} ContentType */
 /** @typedef {{ contentType: ContentType, isBase64Encoded?: boolean, data: string }} Output */
 
@@ -65,6 +65,32 @@ const getFormat = (input) => {
 };
 
 /**
+ * @param { string } data
+ * @param { string } selector
+ * @param { string } property
+ * @param { string? } value
+ * @returns { string }
+ */
+const addStyleToSvg = (data, selector, property, value) => {
+    if (typeof value === 'undefined') { return data; }
+    return data.replace(
+        '<defs>',
+        `<style>${selector} { ${property}: ${value}; }</style><defs>`
+    );
+}
+
+/**
+ * @param { ?string } color
+ * @returns { ?string }
+ */
+const prependHashPerhaps = (color) => {
+    if (typeof color !== 'undefined' && color.match("^[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}$")) {
+        return '#' + color;
+    }
+    return color;
+}
+
+/**
  * Typeset math.
  *
  * @param {{ math: string, format: 'TeX' | 'inline-TeX' | 'MathML', mml?: boolean, svg?: boolean }} data Data.
@@ -103,11 +129,29 @@ const typeset = async (data) => {
 
         // Syntax error.
         if (Array.isArray(err) && typeof err[0] === 'string') {
-            throw new Error(`Invalid source: ${err[0].replace(/[\n\r]+/g, ' ')}`);
+            throw new SyntaxError(`Invalid source: ${err[0].replace(/[\n\r]+/g, ' ')}`);
         }
-        throw new Error('Invalid source');
+        throw new SyntaxError('Invalid source');
     }
 };
+
+/**
+ *
+ * @param {{ mml?: string, svg?: string }} res
+ * @param { ?string } fgColor
+ * @param { ?string } bgColor
+ * @returns { string }
+ */
+const makeInnerSvg = (res, fgColor, bgColor) => {
+    let svg = MathJax.startup.adaptor.innerHTML(res);
+    if (typeof fgColor !== 'undefined') {
+        svg = addStyleToSvg(svg, 'svg', 'color', prependHashPerhaps(fgColor));
+    }
+    if (typeof bgColor !== 'undefined') {
+        svg = addStyleToSvg(svg, 'svg', 'background-color', prependHashPerhaps(bgColor));
+    }
+    return svg;
+}
 
 /**
  * Render math.
@@ -123,9 +167,11 @@ exports.render = async (event) => {
 
     const format = getFormat(event);
     const math = event.source;
+    const fgColor = prependHashPerhaps(event.foreground);
+    const bgColor = prependHashPerhaps(event.background);
 
     if (typeof math === 'undefined') {
-        throw new Error(`Invalid source: it is missing`);
+        throw new SyntaxError(`Missing source`);
     }
 
     switch (event.output) {
@@ -137,8 +183,8 @@ exports.render = async (event) => {
 
         case 'png': {
             const res = await typeset({ math, format, svg: true });
+            const svg = makeInnerSvg(res, fgColor, bgColor);
 
-            const svg = MathJax.startup.adaptor.innerHTML(res);
             const { width, height } = event;
             const data = await svg2png(svg, { width, height });
 
@@ -147,14 +193,13 @@ exports.render = async (event) => {
 
         case 'svg': {
             const res = await typeset({ math, format, svg: true });
-
-            const svg = MathJax.startup.adaptor.innerHTML(res);
+            const svg = makeInnerSvg(res, fgColor, bgColor);
 
             return { contentType: RESPONSE_TYPES.svg, data: svg };
         }
 
         default:
-            throw new Error(`Invalid output: ${event.output || ''}`);
+            throw new SyntaxError(`Invalid output: ${event.output || ''}`);
     }
 };
 
