@@ -71,7 +71,7 @@ router
 @media screen and (prefers-color-scheme: dark) {
     :root {
       --main-color: #e3e3e3;
-      --main-bg-color: #2c2c2c;
+      --main-bg-color: #1c1c1c;
       --link-color: #ffa95c;
       --link-visited-color: #f1790e;
       --link-hover-color: #e5c09b;
