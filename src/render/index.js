@@ -29,10 +29,27 @@ const defaultConfiguration = {
     loader: {
         paths: { mathjax: 'mathjax/es5' },
         require: require,
-        load: ['adaptors/liteDOM', 'input/mml', 'input/tex-full', 'output/svg']
+        load: [
+            // https://docs.mathjax.org/en/latest/web/components/misc.html#adaptors-litedom
+            'adaptors/liteDOM',
+            // https://docs.mathjax.org/en/latest/web/components/input.html#input-tex-full
+            'input/tex-full',
+            // https://docs.mathjax.org/en/latest/web/components/input.html#input-mml
+            'input/mml',
+            // https://docs.mathjax.org/en/latest/web/components/input.html#input-asciimath
+            'input/asciimath',
+            // https://docs.mathjax.org/en/latest/web/components/output.html#output-chtml
+            'output/chtml',
+            // https://docs.mathjax.org/en/latest/web/components/output.html#output-svg
+            'output/svg',
+            // https://docs.mathjax.org/en/latest/web/components/accessibility.html#a11y-semantic-enrich
+            //'a11y/semantic-enrich', //  Cannot find module 'speech-rule-engine'
+            // https://docs.mathjax.org/en/latest/web/components/accessibility.html#a11y-assistive-mml
+            //'a11y/assistive-mml', // XML Parsing Error: junk after document element
+        ]
     },
     options: {
-        enableAssistiveMml: false
+        enableAssistiveMml: false,
     }
 }
 const MJAX_SETTINGS = process.env.MJAX_SETTINGS ? JSON.parse(process.env.MJAX_SETTINGS) : defaultConfiguration;
