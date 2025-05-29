@@ -133,8 +133,7 @@ button[type=submit] {
     </label>
 </div>
 <textarea name="source" rows="12" required placeholder="Enter your LaTeX or MathML here…"></textarea>
-<input type="hidden" name="width" value="512">
-<input type="hidden" name="height" value="316">
+<input type="hidden" name="width" value="800">
 <br>
 <button type="submit">Convert</button>
 </form>
