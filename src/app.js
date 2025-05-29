@@ -61,32 +61,37 @@ router
 <title>LaTeX|MathML to MathML|SVG|PNG</title>
 <style>
 :root {
-  --main-color: #3c3c3c;
-  --main-bg-color: #e3e3e3;
-  --link-color: inherit;
-  --link-visited-color: inherit;
-  --link-hover-color: inherit;
-  --link-active-color: inherit;
+    --main-color: #3c3c3c;
+    --main-bg-color: #e3e3e3;
+    --link-color: inherit;
+    --link-visited-color: inherit;
+    --link-hover-color: inherit;
+    --link-active-color: inherit;
 }
 @media screen and (prefers-color-scheme: dark) {
     :root {
-      --main-color: #e3e3e3;
-      --main-bg-color: #1c1c1c;
-      --link-color: #ffa95c;
-      --link-visited-color: #f1790e;
-      --link-hover-color: #e5c09b;
-      --link-active-color: #e9730b;
+        --main-color: #e3e3e3;
+        --main-bg-color: #1c1c1c;
+        --link-color: #ffa95c;
+        --link-visited-color: #f1790e;
+        --link-hover-color: #e5c09b;
+        --link-active-color: #e9730b;
     }
 }
 @media print {
     :root {
-      --main-color: #2c2c2c;
-      --main-bg-color: #ffffff;
+        --main-color: #2c2c2c;
+        --main-bg-color: #ffffff;
     }
 }
 body, textarea {
-  color: var(--main-color);
-  background-color: var(--main-bg-color);
+    color: var(--main-color);
+    background-color: var(--main-bg-color);
+}
+textarea {
+    width: 100%;
+    margin: 1em 0;
+    font-size: 1.618em;
 }
 a:link { color: var(--link-color); }
 a:visited { color: var(--link-visited-color); }
@@ -127,7 +132,7 @@ button[type=submit] {
         </select>
     </label>
 </div>
-<textarea name="source" cols="62" rows="10" required placeholder="Enter your LaTeX or MathML here…"></textarea>
+<textarea name="source" rows="12" required placeholder="Enter your LaTeX or MathML here…"></textarea>
 <input type="hidden" name="width" value="512">
 <input type="hidden" name="height" value="316">
 <br>
