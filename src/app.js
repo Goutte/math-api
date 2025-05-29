@@ -192,7 +192,7 @@ button[type=submit] {
     </li>
     <li>
         <strong>Contact:</strong>
-        <a href="mailto:agoutenoir@irap.omp.eu">agoutenoir@irap.omp.eu</a> &amp;
+        <a href="mailto:antoine.goutenoir@irap.omp.eu">antoine.goutenoir@irap.omp.eu</a> &amp;
         <a href="mailto:cmeny@irap.omp.eu">cmeny@irap.omp.eu</a>
     </li>
 </ul>
