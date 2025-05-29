@@ -97,11 +97,14 @@ const addStyleToSvg = (data, selector, property, value) => {
 }
 
 /**
+ * Hashes are annoying to pass in URL, so we've made them optional.
+ * Additionally, HTML color names like `chartreuse` should be supported as well.
+ *
  * @param { ?string } color
  * @returns { ?string }
  */
 const prependHashPerhaps = (color) => {
-    if (typeof color !== 'undefined' && color.match("^[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}$")) {
+    if (typeof color !== 'undefined' && null !== color.match("^[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}$")) {
         return '#' + color;
     }
     return color;
@@ -153,7 +156,6 @@ const typeset = async (data) => {
 };
 
 /**
- *
  * @param {{ mml?: string, svg?: string }} res
  * @param { ?string } fgColor
  * @param { ?string } bgColor
@@ -184,8 +186,8 @@ exports.render = async (event) => {
 
     const format = getFormat(event);
     const math = event.source;
-    const fgColor = prependHashPerhaps(event.foreground);
-    const bgColor = prependHashPerhaps(event.background);
+    const fgColor = event.foreground;
+    const bgColor = event.background;
 
     if (typeof math === 'undefined') {
         throw new SyntaxError(`Missing source`);
