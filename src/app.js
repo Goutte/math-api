@@ -198,7 +198,7 @@ button[type=submit] {
     colors of the foreground text and the background.
     <p>
         <em>Valid values:</em> any HTML color, in hexadecimal form (<code>#</code> prefix is optional for convenience)
-        or named form (eg: <code>chartreuse</code>).
+        or named form (eg: <code>chartreuse</code>), but in the latter case the alpha is always ignored.
     </p>
 </li>
 <li>

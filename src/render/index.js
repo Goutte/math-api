@@ -3,6 +3,7 @@ const svg2png = require('svg2png');
 /** @typedef {{ input: 'latex', inline?: boolean } | { input: 'mathml' }} InputDefinition */
 /** @typedef {{ output: 'mathml' | 'svg' } | { output: 'png', width?: number, height?: number }} OutputDefinition */
 /** @typedef {InputDefinition & OutputDefinition & { source: string } & { foreground?: string } & { background?: string } & { foreground_alpha?: int } & { background_alpha?: int }} Input */
+/** @typedef {'mathml' | 'png' | 'svg'} OutputType */
 /** @typedef {'application/mathml+xml' | 'image/png' | 'image/svg+xml'} ContentType */
 /** @typedef {{ contentType: ContentType, isBase64Encoded?: boolean, data: string }} Output */
 
@@ -19,6 +20,11 @@ const RESPONSE_TYPES = {
     png: 'image/png',
     svg: 'image/svg+xml',
 };
+
+const COLOR_REGEX_NOHASH = RegExp("^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$");
+const COLOR_REGEX_3 = RegExp("^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$");
+const COLOR_REGEX_6 = RegExp("^#[0-9a-fA-F]{6}$");
+const COLOR_REGEX_8 = RegExp("^#[0-9a-fA-F]{8}$");
 
 /**
  * MathJax settings.
@@ -82,6 +88,8 @@ const getFormat = (input) => {
 };
 
 /**
+ * Inject a style in the SVG.  Quick and Dirty.
+ *
  * @param { string } data
  * @param { string } selector
  * @param { string } property
@@ -95,11 +103,6 @@ const addStyleToSvg = (data, selector, property, value) => {
         `<style>${selector} { ${property}: ${value}; }</style><defs>`
     );
 }
-
-const COLOR_REGEX_NOHASH = RegExp("^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$");
-const COLOR_REGEX_3 = RegExp("^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$");
-const COLOR_REGEX_6 = RegExp("^#[0-9a-fA-F]{6}$");
-const COLOR_REGEX_8 = RegExp("^#[0-9a-fA-F]{8}$");
 
 /**
  * Hashes are annoying to pass by hand in URL queries, so we've made them optional.
@@ -116,14 +119,19 @@ const prependHashPerhaps = (color) => {
 };
 
 /**
- * @param { int } d
- * @returns { string }
+ * Convert decimal integer or string to 2-character hex form.
+ *
+ * @param { int | string } d
+ * @returns { string } in the range 00 — FF
  */
-const toHex = (d) => {
+const toHex2 = (d) => {
     return  ("0"+((Number(d)+0x100).toString(16))).slice(-2).toUpperCase();
 };
 
 /**
+ * Combine color and alpha channels to make a CSS-compatible color value.
+ * In case of named color values, the alpha channel is ignored.
+ *
  * @param { ?string } color
  * @param { ?int } alpha
  * @returns { ?string }
@@ -131,7 +139,7 @@ const toHex = (d) => {
 const makeCssColor = (color, alpha) => {
     if (typeof color === 'undefined') {
         if (typeof alpha !== 'undefined') {
-            return '#000000' + toHex(alpha);
+            return '#000000' + toHex2(alpha);
         }
         return undefined;
     }
@@ -143,7 +151,7 @@ const makeCssColor = (color, alpha) => {
                 + colorMatch3[1] + colorMatch3[1]
                 + colorMatch3[2] + colorMatch3[2]
                 + colorMatch3[3] + colorMatch3[3]
-                + toHex(alpha);
+                + toHex2(alpha);
         }
         return color;
     }
@@ -151,7 +159,7 @@ const makeCssColor = (color, alpha) => {
     const colorMatch6 = color.match(COLOR_REGEX_6);
     if (null !== colorMatch6) {
         if (typeof alpha !== 'undefined') {
-            return color + toHex(alpha);
+            return color + toHex2(alpha);
         }
         return color;
     }
@@ -159,7 +167,7 @@ const makeCssColor = (color, alpha) => {
     const colorMatch8 = color.match(COLOR_REGEX_8);
     if (null !== colorMatch8) {
         if (typeof alpha !== 'undefined') {
-            return color.slice(0, 7) + toHex(alpha);
+            return color.slice(0, 7) + toHex2(alpha);
         }
         return color;
     }
