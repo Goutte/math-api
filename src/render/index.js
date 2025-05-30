@@ -2,7 +2,7 @@ const svg2png = require('svg2png');
 
 /** @typedef {{ input: 'latex', inline?: boolean } | { input: 'mathml' }} InputDefinition */
 /** @typedef {{ output: 'mathml' | 'svg' } | { output: 'png', width?: number, height?: number }} OutputDefinition */
-/** @typedef {InputDefinition & OutputDefinition & { source: string } & { foreground?: string } & { background?: string }} Input */
+/** @typedef {InputDefinition & OutputDefinition & { source: string } & { foreground?: string } & { background?: string } & { foreground_alpha?: int } & { background_alpha?: int }} Input */
 /** @typedef {'application/mathml+xml' | 'image/png' | 'image/svg+xml'} ContentType */
 /** @typedef {{ contentType: ContentType, isBase64Encoded?: boolean, data: string }} Output */
 
@@ -96,19 +96,76 @@ const addStyleToSvg = (data, selector, property, value) => {
     );
 }
 
+const COLOR_REGEX_NOHASH = RegExp("^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$");
+const COLOR_REGEX_3 = RegExp("^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$");
+const COLOR_REGEX_6 = RegExp("^#[0-9a-fA-F]{6}$");
+const COLOR_REGEX_8 = RegExp("^#[0-9a-fA-F]{8}$");
+
 /**
- * Hashes are annoying to pass in URL, so we've made them optional.
+ * Hashes are annoying to pass by hand in URL queries, so we've made them optional.
  * Additionally, HTML color names like `chartreuse` should be supported as well.
  *
  * @param { ?string } color
  * @returns { ?string }
  */
 const prependHashPerhaps = (color) => {
-    if (typeof color !== 'undefined' && null !== color.match("^[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8}$")) {
+    if (typeof color !== 'undefined' && null !== color.match(COLOR_REGEX_NOHASH)) {
         return '#' + color;
     }
     return color;
-}
+};
+
+/**
+ * @param { int } d
+ * @returns { string }
+ */
+const toHex = (d) => {
+    return  ("0"+((Number(d)+0x100).toString(16))).slice(-2).toUpperCase();
+};
+
+/**
+ * @param { ?string } color
+ * @param { ?int } alpha
+ * @returns { ?string }
+ */
+const makeCssColor = (color, alpha) => {
+    if (typeof color === 'undefined') {
+        if (typeof alpha !== 'undefined') {
+            return '#000000' + toHex(alpha);
+        }
+        return undefined;
+    }
+
+    const colorMatch3 = color.match(COLOR_REGEX_3);
+    if (null !== colorMatch3) {
+        if (typeof alpha !== 'undefined') {
+            return '#'
+                + colorMatch3[1] + colorMatch3[1]
+                + colorMatch3[2] + colorMatch3[2]
+                + colorMatch3[3] + colorMatch3[3]
+                + toHex(alpha);
+        }
+        return color;
+    }
+
+    const colorMatch6 = color.match(COLOR_REGEX_6);
+    if (null !== colorMatch6) {
+        if (typeof alpha !== 'undefined') {
+            return color + toHex(alpha);
+        }
+        return color;
+    }
+
+    const colorMatch8 = color.match(COLOR_REGEX_8);
+    if (null !== colorMatch8) {
+        if (typeof alpha !== 'undefined') {
+            return color.slice(0, 7) + toHex(alpha);
+        }
+        return color;
+    }
+
+    return color;
+};
 
 /**
  * Typeset math.
@@ -186,8 +243,8 @@ exports.render = async (event) => {
 
     const format = getFormat(event);
     const math = event.source;
-    const fgColor = event.foreground;
-    const bgColor = event.background;
+    const fgColor = makeCssColor(prependHashPerhaps(event.foreground), event.foreground_alpha);
+    const bgColor = makeCssColor(prependHashPerhaps(event.background), event.background_alpha);
 
     if (typeof math === 'undefined') {
         throw new SyntaxError(`Missing source`);

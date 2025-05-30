@@ -131,6 +131,18 @@ button[type=submit] {
             <option value="png">PNG</option>
         </select>
     </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <label>
+        Foreground Color:
+        <input type="color" name="foreground" value="#000000">
+        <input type="range" name="foreground_alpha" min="0" max="255" step="1" value="255" title="Opacity of the foreground color">
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <label>
+        Background Color:
+        <input type="color" name="background" value="#FFFFFF">
+        <input type="range" name="background_alpha" min="0" max="255" step="1" value="0" title="Opacity of the background color">
+    </label>
 </div>
 <textarea name="source" rows="12" required placeholder="Enter your LaTeX or MathML here…"></textarea>
 <input type="hidden" name="width" value="800">
@@ -175,10 +187,27 @@ button[type=submit] {
     </p>
 </li>
 <li>
-    <code class="parameter">width</code>, <code class="parameter">height</code>  (<em>optional</em>):
+    <code class="parameter">width, height</code>  (<em>optional</em>):
     when output is <code>png</code>, specify the dimensions of the image to generate.
     <p>
         <em>Valid values:</em> positive integers.
+    </p>
+</li>
+<li>
+    <code class="parameter">foreground, background</code>  (<em>optional</em>):
+    colors of the foreground text and the background.
+    <p>
+        <em>Valid values:</em> any HTML color, in hexadecimal form (<code>#</code> prefix is optional for convenience)
+        or named form (eg: <code>chartreuse</code>).
+    </p>
+</li>
+<li>
+    <code class="parameter">foreground_alpha, background_alpha</code>  (<em>optional</em>):
+    opacity of the foreground text <em>(default: <code>255</code>)</em>
+    and of the background <em>(default: <code>0</code>)</em>.
+    If set, will override an eventual alpha value in <code>foreground</code> or <code>background</code>, respectively.
+    <p>
+        <em>Valid values:</em> positive integers in the range <code>0-255</code>.
     </p>
 </li>
 </ul>
