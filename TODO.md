@@ -13,15 +13,17 @@
 - [x] Landing page on `/` with endpoints documentation
 - [x] Landing page on `/` with demo form
 - [x] No Javascript in the Demo, only pure REST
-- [ ] Bump stale dependencies
+- [x] Bump stale dependencies
+- [x] Bump node to `18-alpine`
+- [ ] Bump `svg2png` _(needs merge and release over there)_
 - [ ] Improve 401 errors by providing usage documentation ?
-- [ ] Configuration via Environment vars
+- [ ] Configuration via Environment vars ?
 - [ ] Cache
     - [ ] Redis
     - [ ] File-Based ? _(filename max length issue)_
-- [ ] Cache Invalidation Endpoint
-    - [ ] Protected (optionally)
-- [ ] Stats Endpoint
+    - [ ] Cache Invalidation Endpoint
+        - [ ] Protected (optionally)
+- [ ] Stats Endpoint ?
     - [ ] Protected (optionally)
 - …
 
