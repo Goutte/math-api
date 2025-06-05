@@ -55,6 +55,7 @@ const defaultConfiguration = {
 
             '[tex]/color',
             '[tex]/mhchem',
+            '[tex]/physics',
         ]
     },
     options: {
@@ -65,6 +66,7 @@ const defaultConfiguration = {
             '[+]': [
                 'color',
                 'mhchem',
+                'physics',
             ],
         },
         color: {
