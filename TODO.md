@@ -13,9 +13,10 @@
 - [x] Landing page on `/` with endpoints documentation
 - [x] Landing page on `/` with demo form
 - [x] No Javascript in the Demo, only pure REST
-- [x] Bump stale dependencies
 - [x] Bump node to `18-alpine`
-- [ ] Bump `svg2png` _(needs merge and release over there)_
+- [ ] Add more tex extensions
+- [ ] Bump stale dependencies
+- [ ] ~~Bump `svg2png`~~ _(upstream refused merge and release)_
 - [ ] Improve 401 errors by providing usage documentation ?
 - [ ] Configuration via Environment vars ?
 - [ ] Cache

@@ -52,11 +52,25 @@ const defaultConfiguration = {
             //'a11y/semantic-enrich', //  Cannot find module 'speech-rule-engine'
             // https://docs.mathjax.org/en/latest/web/components/accessibility.html#a11y-assistive-mml
             //'a11y/assistive-mml', // XML Parsing Error: junk after document element
+
+            '[tex]/color',
+            '[tex]/mhchem',
         ]
     },
     options: {
         enableAssistiveMml: false,
-    }
+    },
+    tex: {
+        packages: {
+            '[+]': [
+                'color',
+                'mhchem',
+            ],
+        },
+        color: {
+            // padding: '5px',
+        },
+    },
 }
 const MJAX_SETTINGS = process.env.MJAX_SETTINGS ? JSON.parse(process.env.MJAX_SETTINGS) : defaultConfiguration;
 MathJax = MJAX_SETTINGS;
