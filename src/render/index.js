@@ -53,9 +53,32 @@ const defaultConfiguration = {
             // https://docs.mathjax.org/en/latest/web/components/accessibility.html#a11y-assistive-mml
             //'a11y/assistive-mml', // XML Parsing Error: junk after document element
 
+            '[tex]/ams',
+            '[tex]/amscd',
+            '[tex]/bbox',
+            '[tex]/boldsymbol',
+            '[tex]/braket',
+            '[tex]/bussproofs',
+            '[tex]/cancel',
+            '[tex]/cases',
+            '[tex]/centernot',
             '[tex]/color',
+            '[tex]/configmacros',
+            '[tex]/empheq',
+            '[tex]/enclose',
+            '[tex]/extpfeil',
+            '[tex]/gensymb',
+            '[tex]/mathtools',
             '[tex]/mhchem',
+            '[tex]/newcommand',
             '[tex]/physics',
+            '[tex]/setoptions',
+            '[tex]/tagformat',
+            '[tex]/textmacros',
+            '[tex]/textcomp',
+            '[tex]/unicode',
+            '[tex]/upgreek',
+            '[tex]/verb',
         ]
     },
     options: {
@@ -64,16 +87,40 @@ const defaultConfiguration = {
     tex: {
         packages: {
             '[+]': [
+                'ams',
+                'amscd',
+                'bbox',
+                'boldsymbol',
+                'braket',
+                'bussproofs',
+                'cancel',
+                'cases',
+                'centernot',
                 'color',
+                'configmacros',
+                'empheq',
+                'enclose',
+                'extpfeil',
+                'gensymb',
+                'mathtools',
                 'mhchem',
+                'newcommand',
                 'physics',
+                'setoptions',
+                'tagformat',
+                'textmacros',
+                'unicode',
+                'upgreek',
+                'verb',
             ],
         },
         color: {
             // padding: '5px',
         },
     },
-}
+    textmacros: {packages: {'[+]': ['textcomp']}},
+};
+
 const MJAX_SETTINGS = process.env.MJAX_SETTINGS ? JSON.parse(process.env.MJAX_SETTINGS) : defaultConfiguration;
 MathJax = MJAX_SETTINGS;
 
@@ -118,7 +165,7 @@ const addStyleToSvg = (data, selector, property, value) => {
         '<defs>',
         `<style>${selector} { ${property}: ${value}; }</style><defs>`
     );
-}
+};
 
 /**
  * Hashes are annoying to pass by hand in URL queries, so we've made them optional.
@@ -251,7 +298,7 @@ const makeInnerSvg = (res, fgColor, bgColor) => {
         svg = addStyleToSvg(svg, 'svg', 'background-color', prependHashPerhaps(bgColor));
     }
     return svg;
-}
+};
 
 /**
  * Render math.
