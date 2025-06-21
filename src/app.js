@@ -1,3 +1,5 @@
+// noinspection CssUnresolvedCustomProperty
+
 const { raw } = require('body-parser');
 const express = require('express');
 const { handler } = require('./render/index.js');
@@ -134,22 +136,24 @@ button[type=submit] {
     &nbsp;&nbsp;&nbsp;&nbsp;
     <label>
         Foreground Color:
-        <input type="color" name="foreground" value="#000000">
-        <input type="range" name="foreground_alpha" min="0" max="255" step="1" value="255" title="Opacity of the foreground color">
+        <input type="color" name="foreground" value="${req.query.foreground || '#000000'}">
+        <input type="range" name="foreground_alpha" min="0" max="255" step="1" value="${req.query.foreground_alpha || 255}" title="Opacity of the foreground color">
     </label>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <label>
         Background Color:
-        <input type="color" name="background" value="#FFFFFF">
-        <input type="range" name="background_alpha" min="0" max="255" step="1" value="0" title="Opacity of the background color">
+        <input type="color" name="background" value="${req.query.background || '#FFFFFF'}">
+        <input type="range" name="background_alpha" min="0" max="255" step="1" value="${req.query.background_alpha || 0}" title="Opacity of the background color">
     </label>
 </div>
-<textarea name="source" rows="12" required placeholder="Enter your LaTeX or MathML here…"></textarea>
+<textarea name="source" rows="12" required placeholder="Enter your LaTeX or MathML here…">${req.query.source || ''}</textarea>
 <input type="hidden" name="width" value="800">
 <br>
 <button type="submit">Convert</button>
 </form>
+
 <hr>
+
 <h2>Endpoints Documentation</h2>
 <h3 class="endpoint">GET /render</h3>
 <h4>Query parameters</h4>
@@ -225,16 +229,15 @@ button[type=submit] {
     </li>
     <li>
         <strong>Contact:</strong>
-        <a href="mailto:antoine.goutenoir@irap.omp.eu">antoine.goutenoir@irap.omp.eu</a> &amp;
-        <a href="mailto:cmeny@irap.omp.eu">cmeny@irap.omp.eu</a>
+        <a href="mailto:claude.meny@irap.omp.eu">claude.meny@irap.omp.eu</a> &amp;
+        <a href="mailto:antoine.goutenoir@irap.omp.eu">antoine.goutenoir@irap.omp.eu</a>
     </li>
 </ul>
 <footer>
     &copy; <a href="https://m3p2.com">m3p2.com</a>
 </footer>
 </body>
-</html>
-        `);
+</html>`);
     });
 
 // Render endpoint.
